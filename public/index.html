@@ -1,0 +1,162 @@
+<!doctype html>
+
+<!-- ASSIGN OUR ANGULAR MODULE -->
+<html ng-app="scotchTodo">
+<head>
+    <!-- META -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Optimize mobile viewport -->
+
+    <title>Node/Angular Todo App</title>
+
+    <!-- SCROLLS -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"><!-- load bootstrap -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+    <style>
+        html 					{ overflow-y:scroll; }
+        body 					{ padding-top:50px; }
+        #todo-list 				{ margin-bottom:30px; }
+        #todo-form 	 			{ margin-bottom:50px; }
+    </style>
+
+    <!-- SPELLS -->
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js"></script><!-- load angular -->
+
+    <script src="js/controllers/main.js"></script> <!-- load up our controller -->
+    <script src="js/services/todos.js"></script> <!-- load our todo service -->
+    <script src="js/core.js"></script> <!-- load our main application -->
+
+    <style> .glyphicon-thumbs-up { cursor:pointer } </style>
+
+    <script src="dirPagination.js"></script>
+
+</head>
+<!-- SET THE CONTROLLER -->
+<body ng-controller="mainController">
+<div class="container">
+
+    <!-- HEADER AND TODO COUNT -->
+    <div class="jumbotron text-center">
+        <h1>LnD Portal <span class="label label-info">{{ todos.length }}</span></h1>
+    </div>
+           <div role="main" class="container theme-showcase">
+                <div class="" style="margin-top:90px;">
+                    <div class="col-lg-8">
+                        <div class="page-header">
+                            <h2 id="tables">List Of Attendies</h2>
+                        </div>
+
+                        <div class="bs-component" >
+
+                            <form class="form-inline">
+                                <div class="form-group">
+                                    <label >Search</label>
+                                    <input type="text" ng-model="search" class="form-control" placeholder="Search">
+                                </div>
+                            </form>
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                <tr>
+                                    <th ng-click="sort('title')">Id
+                                        <span class="glyphicon sort-icon" ng-show="sortKey=='title'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+                                    </th>
+                                    <th ng-click="sort('title')">Title
+                                        <span class="glyphicon sort-icon" ng-show="sortKey=='title'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+                                    </th>
+                                    <th ng-click="sort('desc')">Desc
+                                        <span class="glyphicon sort-icon" ng-show="sortKey=='desc'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+                                    </th>
+                                    <th ng-click="sort('dates')">Dates
+                                        <span class="glyphicon sort-icon" ng-show="sortKey=='dates'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+                                    </th>
+
+                                    <th ng-click="sort('timing')">Timings
+                                        <span class="glyphicon sort-icon" ng-show="sortKey=='timing'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+                                    </th>
+
+                                    <th ng-click="sort('nominee')">Nominee
+                                        <span class="glyphicon sort-icon" ng-show="sortKey=='nominee'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+
+                                <tr dir-paginate="todo in todos|orderBy:sortKey:reverse|filter:search|itemsPerPage:1">
+                                    <td>{{$index + 1}}</td>
+                                    <td>{{todo.title}}</td>
+                                    <td>{{todo.desc}}</td>
+                                    <td>{{todo.dates}}</td>
+                                    <td>{{todo.timing}}</td>
+                                    <td>{{todo.nominee}}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <dir-pagination-controls
+                                    max-size="5"
+                                    direction-links="true"
+                                    boundary-links="true" >
+                            </dir-pagination-controls>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    <!-- TODO LIST -->
+    <!--<div id="todo-list" class="row">
+        <div class="col-sm-4 col-sm-offset-4">
+
+
+
+            <div class="checkbox" ng-repeat="todo in todos">
+                <label>
+                    <input type="checkbox" ng-click="deleteTodo(todo._id)"> {{ todo.title }}
+                </label>
+                <label>
+                    {{ todo.desc }}
+                </label>
+                <label>
+                    {{ todo.dates }}
+                </label>
+                <label>
+                    {{ todo.timing }}
+                </label>
+                <label>
+                    {{ todo.nominee }}
+                </label>
+            </div>
+
+            <p class="text-center" ng-show="loading">
+                <span class="fa fa-spinner fa-spin fa-3x"></span>
+            </p>
+
+        </div>
+    </div>-->
+
+    <!-- FORM TO CREATE TODOS -->
+    <div id="todo-form" class="row">
+        <div class="col-sm-8 col-sm-offset-2 text-center">
+            <form>
+                <div class="form-group">
+
+                    <!-- BIND THIS VALUE TO formData.text IN ANGULAR -->
+                    <label>Training On:</label><input type="text" class="input-lg text-center" placeholder="Title for Training ex. Beginners Training for Java" ng-model="formData.title"><br>
+                    <label>Short Description:</label><input type="text" class="input-lg text-center" placeholder="Short Description..." ng-model="formData.desc"><br>
+                    <label>Date:</label><input type="text" class="input-lg text-center" placeholder="24-05-2016" ng-model="formData.dates"><br>
+                    <label>Timings:</label><input type="text" class="input-lg text-center" placeholder="04:00-05:00" ng-model="formData.timing"><br>
+                    <label>Nominee:</label><input type="text" class="input-lg text-center" placeholder="John Souza" ng-model="formData.nominee"><br>
+                </div>
+
+                <!-- createToDo() WILL CREATE NEW TODOS -->
+                <button type="submit" class="btn btn-primary btn-lg" ng-click="createTodo()">Submit for Approval</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="text-center text-muted">
+        <p>A demo by <a href="http://scotch.io">Scotch</a>.</p>
+        <p>Read the <a href="http://scotch.io/tutorials/javascript/creating-a-single-page-todo-app-with-node-and-angular">tutorial</a>.</p>
+    </div>
+
+</div>
+
+</body>
+</html>
