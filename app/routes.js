@@ -51,30 +51,48 @@ module.exports = function(app, passport) {
             var nodemailer = require('nodemailer');
 
 // create reusable transporter object using the default SMTP transport
-            var transporter = nodemailer.createTransport('smtps://manguesh.borker@gmail.com:navajes123*#@smtp.gmail.com');
-
+            //var transporter = nodemailer.createTransport('smtps://smitaborse518@gmail.com:sminishlokh@smtp.gmail.com');
+var smtpTransport = nodemailer.createTransport("SMTP", {
+  service: "Gmail",
+  auth: {
+    XOAuth2: {
+      user: "smitaborse518@gmail.com", // Your gmail address.
+                                            // Not @developer.gserviceaccount.com
+      clientId: "110591764818-mp60ovi2b6bm5haiajbrdicn7k5gmasl.apps.googleusercontent.com",
+      clientSecret: "DS1TXaw_vugKs6iKQw1s0uVy",
+      refreshToken: "1/ou-hU2fd9S1zMw6BbAU7t8ltxA54zfSB2vvJZDLI5Hw"
+    }
+  }
+});
 // setup e-mail data with unicode symbols
             var mailOptions = {
                 from: 'MB 👥 <mangesh.b1710@yahoo.in>', // sender address
-                to: 'mangueshb@smartek21.com, manguesh.borker@gmail.com', // list of receivers
+                to: 'mangueshb@smartek21.com, manguesh.borker@gmail.com,smitab@smartek21.com', // list of receivers
                 subject: 'Hello ✔', // Subject line
                 text: 'Hello world 🐴', // plaintext body
                 html: '<b>Hello world 🐴</b>' // html body
             };
 
+
+smtpTransport.sendMail(mailOptions, function(error, response) {
+  if (error) {
+   return console.log(error);
+  } else {
+    console.log('Message sent: ' + response);
+  }
+
+  smtpTransport.close();
+  
+});
+
 // send mail with defined transport object
-            transporter.sendMail(mailOptions, function(error, info){
-                if(error){
-                    return console.log(error);
-                }
-                console.log('Message sent: ' + info.response);
-            });
+
 
 			// get and return all the todos after you create another
 			getTodos(res);
 		});
 
-	});
+ 	});
 
 	// delete a todo
 	app.delete('/api/todos/:todo_id', function(req, res) {
