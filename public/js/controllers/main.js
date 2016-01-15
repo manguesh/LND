@@ -1,6 +1,6 @@
-angular.module('todoController', ['angularUtils.directives.dirPagination'])
+angular.module('todoController', ['angularUtils.directives.dirPagination','720kb.datepicker'])
 
-	// inject the Todo service factory into our controller
+// inject the Todo service factory into our controller
 	.controller('mainController', ['$scope','$http','Todos', function($scope, $http, Todos) {
 		$scope.formData = {};
 		$scope.loading = true;
@@ -47,4 +47,8 @@ angular.module('todoController', ['angularUtils.directives.dirPagination'])
 					$scope.todos = data; // assign our new list of todos
 				});
 		};
+		$scope.sort = function(keyname){
+        $scope.sortKey = keyname;   //set the sortKey to the param passed
+        $scope.reverse = !$scope.reverse; //if true make it false and vice versa
+    }
 	}]);
