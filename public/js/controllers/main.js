@@ -1,9 +1,17 @@
 angular.module('todoController', ['angularUtils.directives.dirPagination','720kb.datepicker'])
 
 // inject the Todo service factory into our controller
-	.controller('mainController', ['$scope','$http','Todos', function($scope, $http, Todos) {
+	.controller('mainController', ['$scope','$http','Todos','Users', function($scope, $http, Todos,Users) {
 		$scope.formData = {};
 		$scope.loading = true;
+
+		Users.get()
+		      .success(function(data){
+		      	console.log("data",data);
+		      	$scope.users = data[0];
+                $scope.loading = false;
+		      });
+
 
 		// GET =====================================================================
 		// when landing on the page, get all todos and show them

@@ -1,5 +1,5 @@
 var Todo = require('./models/todo');
-
+var User = require('./models/user');
 function getTodos(res){
 	Todo.find(function(err, todos) {
 
@@ -22,6 +22,17 @@ function isLoggedIn(req, res, next) {
     // if they aren't redirect them to the home page
     res.redirect('/');
 };
+function getUsers(res){
+    User.find(function(err, user) {
+
+        console.log("##################################" + user);
+            // if there is an error retrieving, send the error. nothing after res.send(err) will execute
+            if (err)
+                res.send(err)
+
+            res.json(user); // return all todos in JSON format
+        });
+};
 
 module.exports = function(app, passport) {
 
@@ -32,6 +43,12 @@ module.exports = function(app, passport) {
 		// use mongoose to get all todos in the database
 		getTodos(res);
 	});
+
+    app.get('/api/users', function(req, res) {
+
+        // use mongoose to get all todos in the database
+        getUsers(res);
+    });
 
 	// create todo and send back all todos after creation
 	app.post('/api/todos', function(req, res) {
@@ -151,10 +168,11 @@ smtpTransport.sendMail(mailOptions, function(error, response) {
     // we will want this protected so you have to be logged in to visit
     // we will use route middleware to verify this (the isLoggedIn function)
     app.get('/profile', isLoggedIn, function(req, res) {
+        console.log(req.user);
         /*res.render('profile.ejs', {
             user : req.user // get the user out of session and pass to template
         });*/
-        res.sendfile('./public1/index.html'); // load the single view file (angular will handle the page changes on the front-end)
+        res.sendFile('./public1/index.html'); // load the single view file (angular will handle the page changes on the front-end)
     });
 
     // =====================================
@@ -172,9 +190,13 @@ smtpTransport.sendMail(mailOptions, function(error, response) {
         failureFlash : true // allow flash messages
     }));
 
-    app.post('/login', passport.authenticate('local-login', {
-        successRedirect : '/profile', // redirect to the secure profile section
-        failureRedirect : '/login', // redirect back to the signup page if there is an error
-        failureFlash : true // allow flash messages
-    }));
+  app.post('/login', passport.authenticate('local-login'), function(req, res){
+
+    if(!req.user) {
+        return res.redirect('/login');
+    }else{
+        user = req.user;
+        return res.redirect('/profile');
+    }
+});
 };

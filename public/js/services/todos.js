@@ -14,4 +14,11 @@ angular.module('todoService', [])
 				return $http.delete('/api/todos/' + id);
 			}
 		}
-	}]);
+	}])
+	.factory('Users', ['$http',function($http) {
+		return {
+			get : function() {
+				return $http.get('/api/users');
+			}
+		}
+	}])
